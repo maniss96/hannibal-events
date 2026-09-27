@@ -1,0 +1,331 @@
+@import "tailwindcss";
+
+@theme {
+  /* Palette — river-town grand hotel. No other colors. */
+  --color-ink: #14120f;
+  --color-ink-soft: #3c352c;
+  --color-parchment: #f6f1e8;
+  --color-parchment-deep: #ece4d6;
+  --color-brass: #a9843f;
+  --color-brass-bright: #d1a55c;
+  --color-brass-deep: #6f5322;
+  --color-river: #24403b;
+  --color-river-soft: #33564f;
+  --color-mist: #ded6c8;
+
+  --font-display: var(--font-fraunces);
+  --font-sans: var(--font-newsreader);
+
+  --ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+:root {
+  color-scheme: light;
+  --gutter: 1rem;
+  --safe-l: env(safe-area-inset-left, 0px);
+  --safe-r: env(safe-area-inset-right, 0px);
+  --safe-b: env(safe-area-inset-bottom, 0px);
+}
+
+html {
+  overflow-x: clip;
+  scroll-behavior: smooth;
+  /* Sticky nav clearance for anchor jumps. */
+  scroll-padding-top: 5.5rem;
+  /* Stops iOS inflating type in landscape. */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  background-color: var(--color-parchment);
+  color: var(--color-ink);
+  font-family: var(--font-sans), Georgia, "Times New Roman", serif;
+  letter-spacing: -0.011em;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+  /* No rubber-band reveal of the page edge on iOS. */
+  overscroll-behavior-x: none;
+  min-width: 0;
+}
+
+/* Grey flash on tap in iOS Safari and Android Chrome. */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Hero height: svh keeps the first screen stable while mobile browser
+   chrome collapses. vh is the fallback for anything that lacks it. */
+.h-screen-dynamic {
+  min-height: 100vh;
+  min-height: 100svh;
+}
+
+/* One horizontal gutter for the whole page. Honours the notch in landscape
+   while letting section backgrounds stay full-bleed. */
+.px-gutter {
+  padding-left: max(1rem, var(--safe-l));
+  padding-right: max(1rem, var(--safe-r));
+}
+
+@media (min-width: 640px) {
+  .px-gutter {
+    padding-left: max(1.5rem, var(--safe-l));
+    padding-right: max(1.5rem, var(--safe-r));
+  }
+}
+
+@media (min-width: 1024px) {
+  .px-gutter {
+    padding-left: max(2.5rem, var(--safe-l));
+    padding-right: max(2.5rem, var(--safe-r));
+  }
+}
+
+/* Clears the iOS home indicator on the last block of the page. */
+.pb-safe {
+  padding-bottom: calc(1rem + var(--safe-b));
+}
+
+/* Any horizontally scrolling panel (the capacity table) gets momentum
+   scrolling and keeps its own overscroll from chaining to the page. */
+.scroll-x {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
+}
+
+/* iOS zooms the viewport when a focused control is under 16px. Hold every
+   control at 16px up to the tablet breakpoint. */
+input,
+select,
+textarea {
+  font-size: 16px;
+}
+
+@media (min-width: 768px) {
+  input,
+  select,
+  textarea {
+    font-size: 0.9375rem;
+  }
+}
+
+/* iOS renders date/time inputs shorter than their box and left-aligns oddly. */
+input[type="date"] {
+  min-height: 3rem;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+input[type="date"]::-webkit-date-and-time-value {
+  text-align: left;
+}
+
+/* A chevron for selects, since appearance is stripped for consistency. */
+.select-chevron {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5 6 6.5 11 1.5' stroke='%233c352c' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  padding-right: 2.75rem;
+}
+
+/* ---- Type -------------------------------------------------------------- */
+
+.display {
+  font-family: var(--font-display), Georgia, serif;
+  font-weight: 400;
+  /* opsz 72 is what gives Fraunces its high-contrast display cut. */
+  font-variation-settings: "opsz" 72;
+  line-height: 0.96;
+  letter-spacing: -0.022em;
+  text-wrap: balance;
+}
+
+.display-xl {
+  font-size: clamp(2.6rem, 7.2vw, 6.25rem);
+}
+
+.display-lg {
+  font-size: clamp(2.1rem, 4.6vw, 3.9rem);
+}
+
+.display-md {
+  font-size: clamp(1.6rem, 2.9vw, 2.5rem);
+  line-height: 1.04;
+}
+
+.eyebrow {
+  font-family: var(--font-sans), Georgia, "Times New Roman", serif;
+  font-weight: 500;
+  font-size: 0.75rem;
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+}
+
+.lede {
+  font-size: clamp(1.0625rem, 1.35vw, 1.3125rem);
+  line-height: 1.6;
+  letter-spacing: -0.012em;
+  text-wrap: pretty;
+}
+
+.tnum {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+/* ---- Focus ------------------------------------------------------------- */
+
+:focus-visible {
+  outline: 2px solid var(--color-brass-deep);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+.on-dark :focus-visible {
+  outline-color: var(--color-brass);
+}
+
+/* ---- Hairlines --------------------------------------------------------- */
+
+.rule {
+  border-top: 1px solid var(--color-mist);
+}
+
+.rule-dark {
+  border-top: 1px solid rgb(255 255 255 / 0.16);
+}
+
+/* ---- Scroll reveal -----------------------------------------------------
+   Gated on html.js so the no-JavaScript render shows everything. The hidden
+   state never reaches the server-rendered HTML. */
+
+html.js .reveal {
+  opacity: 0;
+  transform: translate3d(0, 24px, 0);
+  transition:
+    opacity 0.7s var(--ease-out-expo) var(--reveal-delay, 0ms),
+    transform 0.7s var(--ease-out-expo) var(--reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+
+html.js .reveal.is-in {
+  opacity: 1;
+  transform: none;
+  will-change: auto;
+}
+
+/* ---- The room book ------------------------------------------------------
+   Pages laid out in a scroll-snap track: swipe, arrow keys, Home/End, the
+   scrollbar and find-in-page all work without a carousel library. */
+
+.book {
+  scrollbar-width: none;
+}
+
+.book::-webkit-scrollbar {
+  display: none;
+}
+
+.book:focus-visible {
+  outline-offset: 4px;
+}
+
+/* The bound edge of a page. */
+.page {
+  position: relative;
+  overflow: hidden;
+}
+
+.page::before {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  left: 0;
+  width: 26px;
+  background: linear-gradient(90deg, rgb(20 18 15 / 0.12), transparent);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Hero scrim. Solid at the bottom where the type sits, thin at the top
+   so the building stays visible. */
+.hero-scrim {
+  background: linear-gradient(
+    to top,
+    var(--color-ink) 0%,
+    color-mix(in srgb, var(--color-ink) 86%, transparent) 46%,
+    color-mix(in srgb, var(--color-ink) 28%, transparent) 100%
+  );
+}
+
+@media (min-width: 1024px) {
+  .hero-scrim {
+    background: linear-gradient(
+      to top,
+      var(--color-ink) 0%,
+      color-mix(in srgb, var(--color-ink) 72%, transparent) 34%,
+      color-mix(in srgb, var(--color-ink) 14%, transparent) 100%
+    );
+  }
+}
+
+.hero-scrim-side {
+  background: linear-gradient(
+    to right,
+    color-mix(in srgb, var(--color-ink) 55%, transparent),
+    color-mix(in srgb, var(--color-ink) 12%, transparent) 48%,
+    transparent
+  );
+}
+
+/* Keeps the wordmark readable. Fades out before the building. */
+.hero-scrim-top {
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--color-ink) 62%, transparent) 0%,
+    color-mix(in srgb, var(--color-ink) 18%, transparent) 14%,
+    transparent 30%
+  );
+}
+
+/* ---- Ken Burns --------------------------------------------------------- */
+
+@keyframes kenburns {
+  from { transform: scale(1); }
+  to { transform: scale(1.06); }
+}
+
+.kenburns {
+  animation: kenburns 9s var(--ease-out-expo) forwards;
+}
+
+/* ---- Reduced motion: everything resolves to its final static state ------ */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  /* Wins over the html.js rule above, whatever the script timing. */
+  html.js .reveal,
+  html.js .reveal.is-in {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  .kenburns {
+    animation: none !important;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
